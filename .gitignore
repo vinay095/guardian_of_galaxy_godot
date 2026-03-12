@@ -1,0 +1,18 @@
+# Godot 4
+.godot/
+.import/
+
+# Exported builds
+output/
+build/
+exports/
+
+# Import metadata
+*.import
+
+# Script UIDs
+*.uid
+
+# OS junk
+.DS_Store
+Thumbs.db
