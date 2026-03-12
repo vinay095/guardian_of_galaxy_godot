@@ -1,0 +1,44 @@
+[gd_scene load_steps=8 format=3 uid="uid://bktwta6pv6xtu"]
+
+[ext_resource type="PackedScene" uid="uid://b67qjuigi4dvn" path="res://player_ship/ship.tscn" id="1_u8akh"]
+[ext_resource type="Script" path="res://world.gd" id="1_w8tcu"]
+[ext_resource type="Resource" uid="uid://bfkadquef4i33" path="res://game_stats.tres" id="2_6eays"]
+[ext_resource type="PackedScene" uid="uid://qbxorymo61wc" path="res://effects/space_background.tscn" id="2_r2wj6"]
+[ext_resource type="PackedScene" uid="uid://bjhmek36bubm5" path="res://enemies/enemy_generator.tscn" id="3_s2tto"]
+[ext_resource type="LabelSettings" uid="uid://b4kbn4k1bdngv" path="res://fonts/default_label_settings.tres" id="5_2yrt4"]
+[ext_resource type="Script" path="res://boss_manager.gd" id="6_boss"]
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_w8tcu")
+game_stats = ExtResource("2_6eays")
+
+[node name="Ship" parent="." instance=ExtResource("1_u8akh")]
+position = Vector2(80, 216)
+
+[node name="SpaceBackground" parent="." instance=ExtResource("2_r2wj6")]
+
+[node name="EnemyGenerator" parent="." instance=ExtResource("3_s2tto")]
+
+[node name="BossManager" type="Node" parent="."]
+script = ExtResource("6_boss")
+game_stats = ExtResource("2_6eays")
+
+[node name="ScoreLabel" type="Label" parent="."]
+offset_right = 160.0
+offset_bottom = 16.0
+text = "SCORE"
+label_settings = ExtResource("5_2yrt4")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpecialLabel" type="Label" parent="."]
+offset_top = 228.0
+offset_right = 160.0
+offset_bottom = 240.0
+text = "X: BOOST"
+label_settings = ExtResource("5_2yrt4")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AsteroidShowerTimer" type="Timer" parent="."]
+one_shot = true

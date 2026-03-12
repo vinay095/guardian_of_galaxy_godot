@@ -1,0 +1,126 @@
+[gd_scene load_steps=21 format=3 uid="uid://b67qjuigi4dvn"]
+
+[ext_resource type="Script" path="res://player_ship/ship.gd" id="1_mqtmi"]
+[ext_resource type="Script" path="res://components/move_component.gd" id="2_ehosm"]
+[ext_resource type="Script" path="res://components/stats_component.gd" id="2_mw50h"]
+[ext_resource type="Script" path="res://components/move_input_component.gd" id="3_xfx7j"]
+[ext_resource type="Resource" uid="uid://bo3ig3arec1h6" path="res://player_ship/ship_move_stats.tres" id="4_dgl6u"]
+[ext_resource type="Script" path="res://components/position_clamp_component.gd" id="5_vqpx2"]
+[ext_resource type="Script" path="res://components/spawner_component.gd" id="7_26x81"]
+[ext_resource type="PackedScene" uid="uid://3c0cr3714r4k" path="res://projectiles/laser.tscn" id="8_ypby4"]
+[ext_resource type="Script" path="res://components/scale_component.gd" id="9_72otb"]
+[ext_resource type="Script" path="res://components/hurtbox_component.gd" id="12_76ubl"]
+[ext_resource type="Script" path="res://components/hurt_component.gd" id="13_6ric4"]
+[ext_resource type="PackedScene" uid="uid://c7nmpf2186t1j" path="res://effects/explosion_effect.tscn" id="14_b7pps"]
+[ext_resource type="Script" path="res://components/destroyed_component.gd" id="14_tctej"]
+[ext_resource type="AudioStream" uid="uid://brhxk3b8tymrd" path="res://sounds/laser_sound.wav" id="16_skfy5"]
+[ext_resource type="Script" path="res://components/variable_pitch_audio_stream_player.gd" id="16_u0wy7"]
+[ext_resource type="Texture2D" path="res://spacepixels/thruster-1.png" id="18_thruster1"]
+[ext_resource type="Texture2D" path="res://spacepixels/thruster-2.png" id="19_thruster2"]
+[ext_resource type="Texture2D" path="res://spacepixels/thruster-3.png" id="20_thruster3"]
+[ext_resource type="Texture2D" path="res://spacepixels/thruster-4.png" id="21_thruster4"]
+[ext_resource type="Texture2D" path="res://spacepixels/thruster-5.png" id="22_thruster5"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_thruster"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("18_thruster1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_thruster2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_thruster3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_thruster4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_thruster5")
+}],
+"loop": true,
+"name": &"boost",
+"speed": 10.0
+}]
+
+[node name="Ship" type="Node2D"]
+script = ExtResource("1_mqtmi")
+
+[node name="StatsComponent" type="Node" parent="."]
+script = ExtResource("2_mw50h")
+
+[node name="Anchor" type="Node2D" parent="."]
+
+[node name="ShipSprite" type="Sprite2D" parent="Anchor"]
+
+[node name="ThrusterSprite" type="AnimatedSprite2D" parent="Anchor"]
+visible = false
+position = Vector2(0, 10)
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_thruster")
+animation = &"boost"
+
+[node name="MoveComponent" type="Node" parent="." node_paths=PackedStringArray("actor")]
+script = ExtResource("2_ehosm")
+actor = NodePath("..")
+
+[node name="MoveInputComponent" type="Node" parent="." node_paths=PackedStringArray("move_component")]
+script = ExtResource("3_xfx7j")
+move_stats = ExtResource("4_dgl6u")
+move_component = NodePath("../MoveComponent")
+
+[node name="PositionClampComponent" type="Node2D" parent="." node_paths=PackedStringArray("actor")]
+script = ExtResource("5_vqpx2")
+actor = NodePath("..")
+
+[node name="LeftMuzzle" type="Marker2D" parent="."]
+position = Vector2(-5, -6)
+
+[node name="RightMuzzle" type="Marker2D" parent="."]
+position = Vector2(5, -6)
+
+[node name="SpawnerComponent" type="Node2D" parent="."]
+script = ExtResource("7_26x81")
+scene = ExtResource("8_ypby4")
+
+[node name="FireRateTimer" type="Timer" parent="."]
+wait_time = 0.4
+autostart = true
+
+[node name="InvincibilityTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="CooldownTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="ScaleComponent" type="Node" parent="." node_paths=PackedStringArray("sprite")]
+script = ExtResource("9_72otb")
+sprite = NodePath("../Anchor")
+
+[node name="HurtboxComponent" type="Area2D" parent="."]
+collision_mask = 0
+script = ExtResource("12_76ubl")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HurtboxComponent"]
+polygon = PackedVector2Array(-6, 2, -3, -3, -1, -6, 1, -6, 3, -3, 6, 2, 6, 4, 4, 4, 4, 6, -4, 6, -4, 4, -6, 4)
+
+[node name="HurtComponent" type="Node" parent="." node_paths=PackedStringArray("stats_component", "hurtbox_component")]
+script = ExtResource("13_6ric4")
+stats_component = NodePath("../StatsComponent")
+hurtbox_component = NodePath("../HurtboxComponent")
+
+[node name="ExplosionSpawnerComponent" type="Node2D" parent="."]
+script = ExtResource("7_26x81")
+scene = ExtResource("14_b7pps")
+
+[node name="DestroyedComponent" type="Node" parent="." node_paths=PackedStringArray("actor", "stats_component", "destroy_effect_spawner_component")]
+script = ExtResource("14_tctej")
+actor = NodePath("..")
+stats_component = NodePath("../StatsComponent")
+destroy_effect_spawner_component = NodePath("../ExplosionSpawnerComponent")
+
+[node name="VariablePitchAudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("16_skfy5")
+bus = &"Sounds"
+script = ExtResource("16_u0wy7")

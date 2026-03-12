@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://player_ship/ally_ship.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://spacepixels/pixel_ship_blue_small.png" id="2_sprite"]
+[ext_resource type="Script" path="res://components/spawner_component.gd" id="3_spawner"]
+
+[node name="AllyShip" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_sprite")
+
+[node name="SpawnerComponent" type="Node2D" parent="."]
+script = ExtResource("3_spawner")
+
+[node name="FireTimer" type="Timer" parent="."]
+wait_time = 0.6
+autostart = true

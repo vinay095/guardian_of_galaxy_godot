@@ -1,0 +1,77 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://enemies/pixel_station.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://spacepixels/pixel_station_blue.png" id="2_tex"]
+[ext_resource type="Script" path="res://components/stats_component.gd" id="3_stats"]
+[ext_resource type="Script" path="res://components/hurtbox_component.gd" id="4_hurtbox"]
+[ext_resource type="Script" path="res://components/hurt_component.gd" id="5_hurt"]
+[ext_resource type="Script" path="res://components/flash_component.gd" id="6_flash"]
+[ext_resource type="Script" path="res://components/score_component.gd" id="7_score"]
+[ext_resource type="Resource" uid="uid://bfkadquef4i33" path="res://game_stats.tres" id="8_gamestats"]
+[ext_resource type="Script" path="res://components/spawner_component.gd" id="9_spawner"]
+[ext_resource type="PackedScene" uid="uid://c7nmpf2186t1j" path="res://effects/explosion_effect.tscn" id="10_explosion"]
+[ext_resource type="Script" path="res://components/destroyed_component.gd" id="11_destroyed"]
+[ext_resource type="Script" path="res://components/hitbox_component.gd" id="12_hitbox"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hurt"]
+radius = 10.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_laser"]
+size = Vector2(300, 4)
+
+[node name="PixelStation" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_tex")
+
+[node name="StatsComponent" type="Node" parent="."]
+script = ExtResource("3_stats")
+health = 5
+
+[node name="HurtboxComponent" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("4_hurtbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent"]
+shape = SubResource("CircleShape2D_hurt")
+
+[node name="HurtComponent" type="Node" parent="." node_paths=PackedStringArray("stats_component", "hurtbox_component")]
+script = ExtResource("5_hurt")
+stats_component = NodePath("../StatsComponent")
+hurtbox_component = NodePath("../HurtboxComponent")
+
+[node name="FlashComponent" type="Node" parent="." node_paths=PackedStringArray("sprite")]
+script = ExtResource("6_flash")
+sprite = NodePath("../Sprite2D")
+
+[node name="ScoreComponent" type="Node" parent="."]
+script = ExtResource("7_score")
+game_stats = ExtResource("8_gamestats")
+adjust_amount = 15
+
+[node name="SpawnerComponent" type="Node2D" parent="."]
+script = ExtResource("9_spawner")
+scene = ExtResource("10_explosion")
+
+[node name="DestroyedComponent" type="Node" parent="." node_paths=PackedStringArray("actor", "stats_component", "destroy_effect_spawner_component")]
+script = ExtResource("11_destroyed")
+actor = NodePath("..")
+stats_component = NodePath("../StatsComponent")
+destroy_effect_spawner_component = NodePath("../SpawnerComponent")
+
+[node name="LaserLine" type="Line2D" parent="."]
+width = 2.0
+default_color = Color(1, 0.3, 0.3, 0.7)
+
+[node name="LaserHitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LaserHitbox"]
+shape = SubResource("RectangleShape2D_laser")
+
+[node name="DamageTimer" type="Timer" parent="."]
+wait_time = 1.0
+autostart = true

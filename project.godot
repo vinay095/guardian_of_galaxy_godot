@@ -1,0 +1,51 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
+[application]
+
+config/name="Galaxy Defiance"
+run/main_scene="res://menus/menu.tscn"
+config/features=PackedStringArray("4.6", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+ResourceStash="*res://resource_stash.gd"
+MusicPlayer="*res://music_player.tscn"
+ShipData="*res://ship_data.gd"
+
+[display]
+
+window/size/viewport_width=160
+window/size/viewport_height=240
+window/size/window_width_override=640
+window/size/window_height_override=960
+window/stretch/mode="canvas_items"
+
+[input]
+
+special_attack={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":88,"physical_keycode":0,"key_label":0,"unicode":120,"location":0,"echo":false,"script":null)
+]
+}
+
+[layer_names]
+
+2d_physics/layer_1="player_hurtbox"
+2d_physics/layer_2="enemy_hurtbox"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
