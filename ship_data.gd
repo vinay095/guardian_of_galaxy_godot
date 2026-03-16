@@ -18,18 +18,6 @@ var ships: Array[Dictionary] = [
 		"ship_scale": 0.28
 	},
 	{
-		"name": "Blaze",
-		"sprite": "res://spacepixels/ship_orange.png",
-		"health": 2,
-		"fire_rate": 0.22,
-		"laser_texture": "res://spacepixels/pixel_laser_yellow.png",
-		"damage": 2,
-		"speed": 120,
-		"color": "orange",
-		"small_sprite": "res://spacepixels/pixel_ship_red_small_2.png",
-		"ship_scale": 0.28
-	},
-	{
 		"name": "Phantom",
 		"sprite": "res://spacepixels/ship_purple.png",
 		"health": 3,

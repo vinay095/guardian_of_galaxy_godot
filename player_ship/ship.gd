@@ -12,18 +12,21 @@ extends Node2D
 @onready var ship_sprite: Sprite2D = $Anchor/ShipSprite
 @onready var thruster_sprite: AnimatedSprite2D = $Anchor/ThrusterSprite
 @onready var invincibility_timer: Timer = $InvincibilityTimer
-@onready var cooldown_timer: Timer = $CooldownTimer
 @onready var move_input_component: MoveInputComponent = $MoveInputComponent as MoveInputComponent
 
 var is_special_active: bool = false
-var can_use_special: bool = true
+var can_use_special: bool = false  # Starts false, must charge first
 var ship_config: Dictionary
 var laser_color: Color = Color.WHITE
+
+# Boost charge system: accumulates 0.0 → 1.0 over charge_time seconds
+var boost_charge: float = 0.0
+const BOOST_CHARGE_TIME: float = 8.0  # seconds to fully charge
+const BOOST_DURATION: float = 3.0     # seconds of boost
 
 # Color tints for each ship color
 var color_tints = {
 	"green": Color(0.3, 1.0, 0.3),
-	"orange": Color(1.0, 0.7, 0.2),
 	"purple": Color(0.7, 0.3, 1.0),
 	"blue": Color(0.3, 0.5, 1.0)
 }
@@ -33,7 +36,6 @@ func _ready() -> void:
 	ship_config = ShipData.get_selected_ship()
 	_apply_ship_config()
 	invincibility_timer.timeout.connect(_end_special_attack)
-	cooldown_timer.timeout.connect(func(): can_use_special = true)
 
 func _apply_ship_config() -> void:
 	stats_component.health = ship_config["health"]
@@ -66,18 +68,27 @@ func fire_lasers() -> void:
 
 	scale_component.tween_scale()
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	# Accumulate boost charge when not boosting
+	if not is_special_active:
+		if boost_charge < 1.0:
+			boost_charge = minf(boost_charge + delta / BOOST_CHARGE_TIME, 1.0)
+			can_use_special = false
+		else:
+			can_use_special = true
+	
 	if Input.is_action_just_pressed("special_attack") and can_use_special and not is_special_active:
 		_activate_special_attack()
 
 func _activate_special_attack() -> void:
 	is_special_active = true
 	can_use_special = false
+	boost_charge = 0.0
 	hurtbox_component.is_invincible = true
 	thruster_sprite.visible = true
 	thruster_sprite.play("boost")
 	modulate = Color(1.5, 1.5, 2.0, 1.0)
-	invincibility_timer.start(3.0)
+	invincibility_timer.start(BOOST_DURATION)
 
 func _end_special_attack() -> void:
 	is_special_active = false
@@ -85,4 +96,4 @@ func _end_special_attack() -> void:
 	thruster_sprite.visible = false
 	thruster_sprite.stop()
 	modulate = Color.WHITE
-	cooldown_timer.start(15.0)
+	# Charge starts accumulating again immediately

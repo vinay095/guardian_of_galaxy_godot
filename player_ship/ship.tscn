@@ -91,8 +91,8 @@ autostart = true
 [node name="InvincibilityTimer" type="Timer" parent="."]
 one_shot = true
 
-[node name="CooldownTimer" type="Timer" parent="."]
-one_shot = true
+
+
 
 [node name="ScaleComponent" type="Node" parent="." node_paths=PackedStringArray("sprite")]
 script = ExtResource("9_72otb")

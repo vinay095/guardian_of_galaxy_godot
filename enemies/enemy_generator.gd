@@ -6,7 +6,7 @@ extends Node2D
 @export var game_stats: GameStats
 
 var AsteroidScene = preload("res://enemies/asteroid.tscn")
-var PlanetScene = preload("res://enemies/planet.tscn")
+
 var PixelStationScene = preload("res://enemies/pixel_station.tscn")
 
 var margin = 8
@@ -22,7 +22,7 @@ var spawning_enabled: bool = true
 @onready var yellow_enemy_spawn_timer: Timer = $YellowEnemySpawnTimer
 @onready var pink_enemy_spawn_timer: Timer = $PinkEnemySpawnTimer
 @onready var asteroid_spawn_timer: Timer = $AsteroidSpawnTimer
-@onready var planet_spawn_timer: Timer = $PlanetSpawnTimer
+
 @onready var station_spawn_timer: Timer = $StationSpawnTimer
 
 var active_stations: int = 0
@@ -32,7 +32,7 @@ func _ready() -> void:
 	yellow_enemy_spawn_timer.timeout.connect(_spawn_yellow)
 	pink_enemy_spawn_timer.timeout.connect(_spawn_pink)
 	asteroid_spawn_timer.timeout.connect(_spawn_asteroid)
-	planet_spawn_timer.timeout.connect(_spawn_planet)
+
 	station_spawn_timer.timeout.connect(_spawn_station)
 
 # How many total entities are allowed right now based on score
@@ -47,7 +47,6 @@ func get_entity_count() -> int:
 	for child in get_tree().current_scene.get_children():
 		if child is Enemy \
 		or child.is_in_group("asteroid") \
-		or child.is_in_group("planet") \
 		or child.is_in_group("station"):
 			count += 1
 	return count
@@ -118,20 +117,7 @@ func _spawn_asteroid() -> void:
 	asteroid.add_to_group("asteroid")
 	asteroid_spawn_timer.start(next)
 
-# ------- Planet: very slow obstacle -------
-func _spawn_planet() -> void:
-	if game_stats.score < 50:
-		planet_spawn_timer.start(20.0)
-		return
-	var next = _calc_interval(30.0, 18.0)
-	if not spawning_enabled or is_crowded():
-		planet_spawn_timer.start(next)
-		return
-	var planet = PlanetScene.instantiate()
-	get_tree().current_scene.add_child(planet)
-	planet.global_position = Vector2(randf_range(20, screen_width - 20), -30)
-	planet.add_to_group("planet")
-	planet_spawn_timer.start(next)
+
 
 # ------- Pixel station: unlocked after 2 boss clears -------
 func _spawn_station() -> void:

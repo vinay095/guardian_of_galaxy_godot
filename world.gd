@@ -46,7 +46,7 @@ func _ready() -> void:
 func update_score_label(new_score: int) -> void:
 	score_label.text = "Score: " + str(new_score)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	# Update special attack indicator
 	if ship and is_instance_valid(ship):
 		if ship.is_special_active:
@@ -56,8 +56,9 @@ func _process(delta: float) -> void:
 			special_label.text = "X: BOOST"
 			special_label.modulate = Color.GREEN
 		else:
-			special_label.text = "X: COOLDOWN"
-			special_label.modulate = Color(0.5, 0.5, 0.5)
+			var pct = int(ship.boost_charge * 100)
+			special_label.text = "X: " + str(pct) + "%"
+			special_label.modulate = Color(0.5, 0.5, 0.5).lerp(Color.GREEN, ship.boost_charge)
 
 func _on_boss_fight_started() -> void:
 	current_phase = "boss_fight"

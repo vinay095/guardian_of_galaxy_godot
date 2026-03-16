@@ -17,8 +17,8 @@ func _ready() -> void:
 	sprite.texture = load(ship_config["small_sprite"])
 	sprite.scale = Vector2(0.8, 0.8)  # small sprites are ~10-12px, scale to ~8-10px
 	
-	# Set laser scene matching player
-	spawner_component.scene = load(ship_config["laser_scene"])
+	# Set laser scene - use the standard laser (same as player ship)
+	spawner_component.scene = load("res://projectiles/laser.tscn")
 	
 	# Find the player
 	await get_tree().process_frame

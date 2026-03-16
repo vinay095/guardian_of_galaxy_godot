@@ -16,7 +16,7 @@ var left_border = 0
 # Use the display viewport width to get the right border of the screen
 var right_border = ProjectSettings.get_setting("display/window/size/viewport_width")
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	# If the actor's x position is less than the left border plus the margin,
 	# bounce off the left side of the screen
 	if actor.global_position.x < left_border + margin:

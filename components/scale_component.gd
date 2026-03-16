@@ -11,15 +11,23 @@ extends Node
 # Export the scale duration
 @export var scale_duration: = 0.4
 
+# Store the sprite's original scale so we tween back to it (not Vector2.ONE)
+var _original_scale: Vector2 = Vector2.ONE
+var _original_scale_set: bool = false
+
 # This is the function that will activate this component
 func tween_scale() -> void:
+	# Capture original scale on first call (after sprite setup has run)
+	if not _original_scale_set and sprite:
+		_original_scale = sprite.scale
+		_original_scale_set = true
+	
+	# Compute the target "pop" scale relative to the original
+	var pop_scale = _original_scale * scale_amount
+	
 	# We are going to scale the sprite using a tween (so we can make is smooth)
-	# First we create the tween and set it's transition type and easing type
 	var tween = create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 	
-	# Next we scale the sprite from its current scale to the scale amount (in 1/10th of the scale duration)
-	tween.tween_property(sprite, "scale", scale_amount, scale_duration * 0.1).from_current()
-	# Finally we scale back to a value of 1 for the other 9/10ths of the scale duration
-	# Consider that we always scale back to a value of 1, you could store the starting scale amount for the sprite
-	# as well for games where your character doesn't start with a scale of 1
-	tween.tween_property(sprite, "scale", Vector2.ONE, scale_duration * 0.9).from(scale_amount)
+	# Scale up to pop_scale then back to original
+	tween.tween_property(sprite, "scale", pop_scale, scale_duration * 0.1).from_current()
+	tween.tween_property(sprite, "scale", _original_scale, scale_duration * 0.9).from(pop_scale)

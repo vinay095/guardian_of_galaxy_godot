@@ -64,7 +64,7 @@ func _ready() -> void:
 	# Damage tick timer for continuous laser
 	damage_timer.timeout.connect(_deal_laser_damage)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	# Pulse the laser opacity for visual effect
 	var pulse = 0.5 + 0.3 * sin(Time.get_ticks_msec() * 0.005)
 	laser_line.default_color = Color(1.0, 0.3, 0.3, pulse)
