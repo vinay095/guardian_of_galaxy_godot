@@ -27,21 +27,10 @@ var laser_active: bool = true
 func _ready() -> void:
 	# Random station texture and scale down to game units
 	sprite.texture = load(station_textures.pick_random())
-	sprite.scale = Vector2(0.45, 0.45)
+	sprite.scale = Vector2(0.3, 0.3)
 	
-	# Random laser angle - sideways, slanted, or straight down
-	var angle_options = [
-		PI / 2,     # Straight down
-		-PI / 2,    # Straight up
-		PI / 4,     # Diagonal down-right
-		-PI / 4,    # Diagonal up-right  
-		3 * PI / 4, # Diagonal down-left
-		PI / 3,     # Slight diagonal
-		PI / 6,     # More horizontal
-		0,          # Horizontal right
-		PI,         # Horizontal left
-	]
-	laser_angle = angle_options.pick_random()
+	# Always fire straight down toward the bottom of the screen
+	laser_angle = PI / 2.0
 	
 	stats_component.no_health.connect(func():
 		score_component.adjust_score()
@@ -57,7 +46,7 @@ func _ready() -> void:
 	laser_line.default_color = Color(1.0, 0.3, 0.3, 0.7)
 	_update_laser()
 	
-	# Rotate the laser hitbox to match the angle
+	# Rotate the laser hitbox to match the angle (straight down)
 	laser_hitbox.rotation = laser_angle
 	laser_hitbox.get_node("CollisionShape2D").position = Vector2(150, 0) # Center along the beam
 	
