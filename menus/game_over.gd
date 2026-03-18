@@ -23,6 +23,11 @@ func _process(_delta: float) -> void:
 		game_stats.score = 0
 		get_tree().change_scene_to_file("res://menus/menu.tscn")
 
+func _input(event: InputEvent) -> void:
+	if event is InputEventScreenTouch and event.pressed:
+		game_stats.score = 0
+		get_tree().change_scene_to_file("res://menus/menu.tscn")
+
 func load_highscore() -> void:
 	var config = ConfigFile.new()
 	var error = config.load(save_path)

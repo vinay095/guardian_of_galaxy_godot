@@ -11,6 +11,7 @@ extends Node2D
 @onready var asteroid_shower_timer: Timer = $AsteroidShowerTimer
 
 var current_phase: String = "normal" # normal, asteroid_shower, boss_fight
+var has_buffed_player: bool = false
 
 func _ready() -> void:
 	randomize()
@@ -43,8 +44,26 @@ func _ready() -> void:
 	special_label.text = "X: BOOST"
 	special_label.modulate = Color.GREEN
 
+	# Add TouchScreenButton for mobile boost
+	var touch_btn = TouchScreenButton.new()
+	touch_btn.action = "special_attack"
+	var shape = RectangleShape2D.new()
+	shape.size = Vector2(160, 60)
+	touch_btn.shape = shape
+	touch_btn.position = Vector2(80, 210)
+	var canvas_layer = CanvasLayer.new()
+	canvas_layer.layer = 10
+	canvas_layer.add_child(touch_btn)
+	add_child(canvas_layer)
+
 func update_score_label(new_score: int) -> void:
 	score_label.text = "Score: " + str(new_score)
+	if new_score >= 2000 and not has_buffed_player:
+		has_buffed_player = true
+		if ship and is_instance_valid(ship):
+			ship.has_attack_buff = true
+			ship.fire_rate_timer.wait_time /= 1.2
+			# Force a restart of the timer if needed, but it will pick up next cycle naturally
 
 func _process(_delta: float) -> void:
 	# Update special attack indicator

@@ -71,7 +71,7 @@ layout_mode = 2
 
 [node name="MenuLabel" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-text = "Press 'space' to Return
+text = "Tap to Return
 to the Start Menu"
 label_settings = ExtResource("3_k64km")
 horizontal_alignment = 1

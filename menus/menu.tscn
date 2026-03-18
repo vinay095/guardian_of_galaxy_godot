@@ -35,6 +35,6 @@ horizontal_alignment = 1
 
 [node name="StartLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=2091680527]
 layout_mode = 2
-text = "Press 'Space' to play"
+text = "Tap to Play"
 label_settings = ExtResource("3_vfbob")
 horizontal_alignment = 1
