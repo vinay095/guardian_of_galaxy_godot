@@ -76,4 +76,3 @@ func set_boss_sprite(ship_config: Dictionary) -> void:
 		sprite_node.scale = Vector2(s, s)
 		# Flip vertically so the ship faces downward (toward the player)
 		sprite_node.flip_v = true
-
