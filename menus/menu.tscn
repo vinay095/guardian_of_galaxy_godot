@@ -29,7 +29,7 @@ layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=663096554]
 layout_mode = 2
-text = "Galaxy Defiance"
+text = "Astro Blitz"
 label_settings = ExtResource("2_h61bn")
 horizontal_alignment = 1
 
