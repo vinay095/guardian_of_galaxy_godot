@@ -2,10 +2,17 @@
 .godot/
 .import/
 
+# Android Gradle build folder
+android/
+
+# Export presets (contains local signing config)
+export_presets.cfg
+
 # Exported builds
 output/
 build/
 exports/
+*.apk
 
 # Import metadata
 *.import
@@ -16,4 +23,3 @@ exports/
 # OS junk
 .DS_Store
 Thumbs.db
-
